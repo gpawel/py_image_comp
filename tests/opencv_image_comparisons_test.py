@@ -1,6 +1,5 @@
-# tests/test_comparison.py
 import pytest
-from image_comparison.compare_images import ImageComparison, ComparisonMethod
+from image_comparison.opencv_image_comparator import OpenCVImageComparator
 
 IMAGE_1 = '../etc/images/test_image_1.jpg'
 IMAGE_2 = '../etc/images/test_image_2.jpg'
@@ -20,12 +19,12 @@ def different_image_paths():
 # Unit tests constructing their own ImageComparison instance
 def test_mse_identical_images(identical_image_paths):
     image1_path, image2_path = identical_image_paths
-    comparator = ImageComparison(image1_path, image2_path)
-    assert comparator.get_mean_squared_error_score() == 0  # Expecting MSE to be 0 for identical images
+    comparator = OpenCVImageComparator(image1_path, image2_path)
+    assert comparator.compare_images_mse() == 0  # Expecting MSE to be 0 for identical images
 
 
 def test_mse_different_images(different_image_paths):
     image1_path, image2_path = different_image_paths
-    comparator = ImageComparison(image1_path, image2_path)
-    mse_value = comparator.get_mean_squared_error_score()
+    comparator = OpenCVImageComparator(image1_path, image2_path)
+    mse_value = comparator.compare_images_mse()
     assert mse_value > 0  # MSE should be greater than 0 for different images
