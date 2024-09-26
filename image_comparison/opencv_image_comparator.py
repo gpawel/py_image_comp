@@ -87,9 +87,9 @@ class OpenCVImageComparator(AbstractImageComparison):
 
     def compare_images_mse(self) -> float:
         """
-                        Calculate the Mean Squared Error (MSE) between two images.
-                        :return: MSE value representing the similarity between the images. Lower values mean more similar.
-                        """
+        Calculate the Mean Squared Error (MSE) between two images.
+        :return: MSE value representing the similarity between the images. Lower values mean more similar.
+        """
         # Read the images
         image1 = load_image_greyscale(self.image_path_1)
         image2 = load_image_greyscale(self.image_path_2)
