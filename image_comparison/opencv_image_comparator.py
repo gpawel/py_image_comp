@@ -94,6 +94,7 @@ class OpenCVImageComparator(AbstractImageComparison):
         image1 = load_image_greyscale(self.image_path_1)
         image2 = load_image_greyscale(self.image_path_2)
 
+        image1, image2 = resize_to_smaller_image(image1, image2)
         # Compute the MSE
         mse_value = float(np.mean((image1.astype("float") - image2.astype("float")) ** 2))
         return mse_value
