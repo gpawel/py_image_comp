@@ -1,12 +1,6 @@
 import cv2
 import numpy as np
-from image_comparison.abstract_image_comparator import AbstractImageComparison
-
-
-def check_image_loaded(img, image_path) -> np.ndarray:
-    if img is None:
-        raise ValueError("Error loading image from: " + image_path)
-    return img
+from image_comparison.abstract_image_comparator import *
 
 
 def load_image_colored (image_path) -> np.ndarray:
