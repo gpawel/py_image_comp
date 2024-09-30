@@ -1,3 +1,6 @@
+import numpy as np
+
+
 def check_image_loaded(img, image_path) -> np.ndarray:
     if img is None:
         raise ValueError("Error loading image from: " + image_path)

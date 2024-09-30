@@ -1,10 +1,15 @@
 import pytest
+import os.path
 
-IMAGE_1 = '../../etc/images/test_image_1.jpg'
-IMAGE_2 = '../../etc/images/test_image_2.jpg'
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.dirname(CURRENT_DIR)
+IMAGES_PATH = os.path.join(ROOT, 'etc', 'images')
 
-IMAGE_3 = '../../etc/images/selection_1.png'
-IMAGE_3_LARGER = '../../etc/images/selection_1_large.png'
+IMAGE_1 = os.path.join(IMAGES_PATH, 'test_image_1.jpg')
+IMAGE_2 = os.path.join(IMAGES_PATH, 'test_image_2.jpg')
+
+IMAGE_3 = os.path.join(IMAGES_PATH, 'selection_1.png')
+IMAGE_3_LARGER = os.path.join(IMAGES_PATH, 'selection_1_large.png')
 
 
 @pytest.fixture()
