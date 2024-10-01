@@ -170,3 +170,31 @@ class OpenCVImageComparator(AbstractImageComparison):
         print(f"Correlation Score (Colored): {average_correlation}")
         return average_correlation
 
+    def absolute_difference_greyscale(self, store_image = False, store_image_path = ".") -> tuple:
+        '''
+        Compares two images.
+        If srore_image = True, the method will save the result image in provided store_image_path
+        :return The method will return two numbers:
+            1. Total Difference (total_diff):
+            0 means the two images are identical, i.e., there are no differences.
+            The higher the total difference, the more the images differ.
+            The value is the sum of all pixel-wise absolute differences across all channels (for color images) or intensity differences (for grayscale images).
+
+            2. Mean Difference (mean_diff):
+            0 means the images are identical.
+            A higher mean difference indicates a larger average pixel difference between the two images.
+            For 8-bit images, the mean difference is typically in the range of 0 to 255, where 0 means identical and 255 would indicate maximum possible difference for every pixel (which is rare).
+        '''
+        img1 = load_image_greyscale(self.image_path_1)
+        img2 = load_image_greyscale(self.image_path_2)
+
+        if img1.shape != img2.shape:
+            raise ValueError("Error: Images must be of the same size and type.")
+
+        diff = cv2.absdiff(img1, img2)
+        cv2.imshow("Difference", diff)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+
+        return 1, 2
+
