@@ -3,7 +3,7 @@ import numpy as np
 from image_comparison.abstract_image_comparator import *
 
 
-def load_image_colored (image_path) -> np.ndarray:
+def load_image_colored(image_path) -> np.ndarray:
     img = cv2.imread(image_path)
     return check_image_loaded(img, image_path)
 
@@ -191,10 +191,16 @@ class OpenCVImageComparator(AbstractImageComparison):
         if img1.shape != img2.shape:
             raise ValueError("Error: Images must be of the same size and type.")
 
-        diff = cv2.absdiff(img1, img2)
-        cv2.imshow("Difference", diff)
+        abs_diff = cv2.absdiff(img1, img2)
+        # Calculate the sum of all absolute differences
+        total_diff = np.sum(abs_diff)
+
+        # Optionally, calculate the mean difference (average)
+        mean_diff = np.mean(abs_diff)
+
+        cv2.imshow("Difference", abs_diff)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
-        return 1, 2
+        return total_diff, mean_diff
 
