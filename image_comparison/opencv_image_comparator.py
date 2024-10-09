@@ -198,9 +198,9 @@ class OpenCVImageComparator(AbstractImageComparison):
         # Optionally, calculate the mean difference (average)
         mean_diff = np.mean(abs_diff)
 
-        cv2.imshow("Difference", abs_diff)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
+        # cv2.imshow("Difference", abs_diff)
+        # cv2.waitKey(0)
+        # cv2.destroyAllWindows()
 
         return total_diff, mean_diff
 
