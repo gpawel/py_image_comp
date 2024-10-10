@@ -1,5 +1,7 @@
 from tests.base_tests import BaseTest
 from tests.conftest import *
+from image_comparison.opencv_image_comparator import *
+
 
 class TestOpenCVAbsDiff(BaseTest):
 
@@ -23,7 +25,5 @@ class TestOpenCVAbsDiff(BaseTest):
         img1, img2 = get_same_image_scaled
         with pytest.raises(ValueError) as exc_info:
             self.compare_using_opencv_method(img1, img2, lambda comp: comp.absolute_difference_greyscale())
-
         # Assert the exception message
         assert str(exc_info.value) == "Error: Images must be of the same size and type."
-
