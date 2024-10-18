@@ -75,6 +75,23 @@ def resize_to_smaller_image(image_1: np.ndarray, image_2: np.ndarray) -> tuple[n
         return image_1, img2_resized
 
 
+def abs_diff_images(image1, image2) -> tuple:
+    if image1.shape != image2.shape:
+        raise ValueError("Error: Images must be of the same size and type.")
+    abs_diff = cv2.absdiff(image1, image2)
+    # Calculate the sum of all absolute differences
+    total_diff = np.sum(abs_diff)
+
+    # Optionally, calculate the mean difference (average)
+    mean_diff = np.mean(abs_diff)
+
+    # cv2.imshow("Difference", abs_diff)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
+
+    return total_diff, mean_diff
+
+
 class OpenCVImageComparator(AbstractImageComparison):
     def __init__(self, image_path_1, image_path_2):
         super().__init__(image_path_1,image_path_2)
@@ -170,10 +187,10 @@ class OpenCVImageComparator(AbstractImageComparison):
         print(f"Correlation Score (Colored): {average_correlation}")
         return average_correlation
 
-    def absolute_difference_greyscale(self, store_image = False, store_image_path = ".") -> tuple:
+    def absolute_difference_greyscale(self) -> tuple:
         '''
-        Compares two images.
-        If srore_image = True, the method will save the result image in provided store_image_path
+        Compares two images by using abs_diff method from opencv library.
+        This method loads provided images using grayscale loading.
         :return The method will return two numbers:
             1. Total Difference (total_diff):
             0 means the two images are identical, i.e., there are no differences.
@@ -187,20 +204,25 @@ class OpenCVImageComparator(AbstractImageComparison):
         '''
         img1 = load_image_greyscale(self.image_path_1)
         img2 = load_image_greyscale(self.image_path_2)
+        return abs_diff_images(img1, img2)
 
-        if img1.shape != img2.shape:
-            raise ValueError("Error: Images must be of the same size and type.")
+    def absolute_difference_coloured(self) -> tuple:
+        '''
+        Compares two images by using abs_diff method from opencv library.
+        This method loads provided images using coloured loading.
+        :return The method will return two numbers:
+            1. Total Difference (total_diff):
+            0 means the two images are identical, i.e., there are no differences.
+            The higher the total difference, the more the images differ.
+            The value is the sum of all pixel-wise absolute differences across all channels (for color images) or intensity differences (for grayscale images).
 
-        abs_diff = cv2.absdiff(img1, img2)
-        # Calculate the sum of all absolute differences
-        total_diff = np.sum(abs_diff)
+            2. Mean Difference (mean_diff):
+            0 means the images are identical.
+            A higher mean difference indicates a larger average pixel difference between the two images.
+            For 8-bit images, the mean difference is typically in the range of 0 to 255, where 0 means identical and 255 would indicate maximum possible difference for every pixel (which is rare).
+        '''
+        img1 = load_image_colored(self.image_path_1)
+        img2 = load_image_colored(self.image_path_2)
+        return abs_diff_images(img1, img2)
 
-        # Optionally, calculate the mean difference (average)
-        mean_diff = np.mean(abs_diff)
-
-        # cv2.imshow("Difference", abs_diff)
-        # cv2.waitKey(0)
-        # cv2.destroyAllWindows()
-
-        return total_diff, mean_diff
 
