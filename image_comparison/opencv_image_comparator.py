@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 from image_comparison.abstract_image_comparator import *
+from skimage.metrics import structural_similarity as ssim
 
 
 def load_image_colored(image_path) -> np.ndarray:
@@ -224,5 +225,47 @@ class OpenCVImageComparator(AbstractImageComparison):
         img1 = load_image_colored(self.image_path_1)
         img2 = load_image_colored(self.image_path_2)
         return abs_diff_images(img1, img2)
+
+    def compare_images_ssim_gray(self):
+        # Load the images from the given file paths
+        image1 = load_image_greyscale(self.image_path_1)
+        image2 = load_image_greyscale(self.image_path_2)
+
+        # Convert images to grayscale
+        gray_image1 = cv2.cvtColor(image1, cv2.COLOR_BGR2GRAY)
+        gray_image2 = cv2.cvtColor(image2, cv2.COLOR_BGR2GRAY)
+
+        # Calculate SSIM between the two images
+        score, diff = ssim(gray_image1, gray_image2, full=True)
+        diff = (diff * 255).astype("uint8")
+
+        print(f"SSIM Score (Grayscale): {score}")
+
+        # Display the difference image
+        cv2.imshow("Difference Image (Grayscale)", diff)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+
+        return score
+
+    def compare_images_ssim_colored(self):
+        # Load the images from the given file paths
+        image1 = load_image_colored(self.image_path_1)
+        image2 = load_image_colored(self.image_path_2)
+
+        # Convert images to RGB
+        image1_rgb = cv2.cvtColor(image1, cv2.COLOR_BGR2RGB)
+        image2_rgb = cv2.cvtColor(image2, cv2.COLOR_BGR2RGB)
+
+        # Calculate SSIM between the two images channel-wise and take the average
+        score_r, _ = ssim(image1_rgb[:, :, 0], image2_rgb[:, :, 0], full=True)
+        score_g, _ = ssim(image1_rgb[:, :, 1], image2_rgb[:, :, 1], full=True)
+        score_b, _ = ssim(image1_rgb[:, :, 2], image2_rgb[:, :, 2], full=True)
+        score = (score_r + score_g + score_b) / 3
+
+        print(f"SSIM Score (Colored): {score}")
+
+        return score
+
 
 
