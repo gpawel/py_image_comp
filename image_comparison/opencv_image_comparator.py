@@ -231,20 +231,16 @@ class OpenCVImageComparator(AbstractImageComparison):
         image1 = load_image_greyscale(self.image_path_1)
         image2 = load_image_greyscale(self.image_path_2)
 
-        # Convert images to grayscale
-        gray_image1 = cv2.cvtColor(image1, cv2.COLOR_BGR2GRAY)
-        gray_image2 = cv2.cvtColor(image2, cv2.COLOR_BGR2GRAY)
-
         # Calculate SSIM between the two images
-        score, diff = ssim(gray_image1, gray_image2, full=True)
+        score, diff = ssim(image1, image2, full=True)
         diff = (diff * 255).astype("uint8")
 
         print(f"SSIM Score (Grayscale): {score}")
 
         # Display the difference image
-        cv2.imshow("Difference Image (Grayscale)", diff)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
+        # cv2.imshow("Difference Image (Grayscale)", diff)
+        # cv2.waitKey(0)
+        # cv2.destroyAllWindows()
 
         return score
 

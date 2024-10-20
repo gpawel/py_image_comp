@@ -3,12 +3,6 @@ from tests.base_tests import BaseTest
 from tests.conftest import *
 
 
-# def __compare(img1, img2) -> float:
-#     comparator = OpenCVImageComparator(img1, img2)
-#     rate = comparator.compare_images_mse()
-#     print(f"\ncomparison rate: {rate}")
-#     return rate
-
 class TestMSEImageComparison(BaseTest):
 
     # Unit opencv_tests constructing their own ImageComparison instance
