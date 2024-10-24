@@ -111,17 +111,6 @@ class OpenCVImageComparator(AbstractImageComparison):
         mse_value = float(np.mean((image1.astype("float") - image2.astype("float")) ** 2))
         return mse_value
 
-    # def compare_images_ssim(self) -> float:
-    #     # Load images
-    #     image_1 = load_image_greyscale(self.image_path_1)
-    #     image_2 = load_image_greyscale(self.image_path_2)
-    #     # Resize the images to the smaller one
-    #     image_1, image_2 = resize_to_smaller_image(image_1, image_2)
-    #     # Example implementation: using Structural Similarity Index (SSIM)
-    #     score, _ = ssim(image1, image2, full=True)
-    #     print(f"Comparison score: {score}")
-    #     return score
-
     def compare_images_histograms_correlation_grayscale(self) -> float:
         '''
         Correlation (cv2.HISTCMP_CORREL):
