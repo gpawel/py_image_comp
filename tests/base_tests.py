@@ -1,6 +1,7 @@
 import pytest
 from image_comparison.opencv_image_comparator import OpenCVImageComparator
 from image_comparison.image_hash_comparrison import ImageHashComparison
+from image_comparison.scikit_image_comparator import SciKitImageComparator
 
 
 class BaseTest:
@@ -16,4 +17,9 @@ class BaseTest:
         diff = comparator_method(comparator)
         print(f"\nImage Hash difference is: {diff}")
         return diff
-    
+
+    def compare_using_scikit_grayscale_ssim_method(self, image_path_1, image_path_2, comparator_method):
+        comparator = SciKitImageComparator(image_path_1, image_path_2)
+        similarity, diff = comparator_method(comparator)
+        print(f"\Images similarity: {similarity}; difference: {diff}")
+        return similarity, diff
