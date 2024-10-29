@@ -23,6 +23,17 @@ class SciKitImageComparator(AbstractImageComparison):
         # mean_diff closer to 0 indicates greater difference
         return similarity, mean_diff
 
+    def compare_grayscale_resized_images_ssim(self) -> tuple:
+        img1 = load_image_greyscale(self.image_path_1)
+        img2 = load_image_greyscale(self.image_path_2)
+
+        img1, img2 = resize_to_smaller_image(img1, img2)
+
+        similarity, diff = ssim(img1, img2, full=True)
+        mean_diff = np.mean(diff) # Assuming 'diff' is the output from the SSIM function
+        # mean_diff closer to 0 indicates greater difference
+        return similarity, mean_diff
+
     def compare_coloured_images_ssim(self) -> tuple:
         img1 = load_image_colored(self.image_path_1)
         img2 = load_image_colored(self.image_path_2)

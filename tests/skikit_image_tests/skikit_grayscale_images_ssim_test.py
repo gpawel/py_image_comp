@@ -18,6 +18,7 @@ class TestSkiKitGrayscaleImageComparison(BaseTest):
         assert str(exc_info.value) == "Input images must have the same dimensions."
 
     def test_scikit_ssim_comparison_resized_scaled_images(self, get_same_image_scaled):
-        img1_p, img2_p = get_same_image_scaled
-        img1, img2 = resize_grayscale_to_smaller_images_by_path(img1_p, img2_p)
-        similarity, diff_mean = self.compare_using_scikit_grayscale_ssim_method(img1, img2, lambda comp: comp.compare_grayscale_images_ssim())
+        img1, img2 = get_same_image_scaled
+        similarity, diff_mean = self.compare_using_scikit_grayscale_ssim_method(img1, img2, lambda comp: comp.compare_grayscale_resized_images_ssim())
+        assert 0.95 <= similarity <=1
+        assert 0.95 <= diff_mean <= 1

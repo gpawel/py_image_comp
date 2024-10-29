@@ -48,10 +48,12 @@ def load_image_greyscale(image_path) -> np.ndarray:
     img = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
     return check_image_loaded(img, image_path)
 
+
 def resize_grayscale_to_smaller_images_by_path(image_path_1, image_path_2) -> tuple[np.ndarray, np.ndarray]:
     img1 = load_image_greyscale(image_path_1)
     img2 = load_image_greyscale(image_path_2)
     return resize_to_smaller_image(img1, img2)
+
 
 def resize_to_smaller_image(image_1: np.ndarray, image_2: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     """
