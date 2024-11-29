@@ -4,8 +4,10 @@ from image_comparison.abstract_image_comparator import *
 from skimage.metrics import structural_similarity as ssim
 
 
+# THIS MODULE CONTAINS UTILITIES TO COMPARE IMAGES
+# USING OPENCV AND SKIIMAGE LIBRARIES
 def load_image_colored(image_path) -> np.ndarray:
-    img = cv2.imread(image_path)
+    img = cv2.imread(image_path, cv2.IMREAD_COLOR)
     return check_image_loaded(img, image_path)
 
 
@@ -45,11 +47,24 @@ def resize_image_keep_aspect_ratio(image: np.ndarray, new_width=None, new_height
 
 
 def load_image_greyscale(image_path) -> np.ndarray:
+    """
+    Load image using grayscale mode
+
+    :param image_path: File path to the image to load.
+    :return: image loaded as the np.ndarray
+    """
     img = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
     return check_image_loaded(img, image_path)
 
 
 def resize_grayscale_to_smaller_images_by_path(image_path_1, image_path_2) -> tuple[np.ndarray, np.ndarray]:
+    """
+    This method re-sizes grayscale images to the smallest image dimensions
+    Before re-sizing, the method loads images using grayscale mode
+    :param image_path1: File path to the first image
+    :param image_path2: File path to the second image
+    :return: tuple with images resized to the smaller image
+    """
     img1 = load_image_greyscale(image_path_1)
     img2 = load_image_greyscale(image_path_2)
     return resize_to_smaller_image(img1, img2)
@@ -83,6 +98,12 @@ def resize_to_smaller_image(image_1: np.ndarray, image_2: np.ndarray) -> tuple[n
 
 
 def abs_diff_images(image1, image2) -> tuple:
+    '''
+    This method returns total and mean differences between image 1 and image2 as tuple
+    :param image1: np.ndarray representation of the first image
+    :param image2: np.ndarray representation of the second image
+    :return:total and mean differences of the images.
+    '''
     if image1.shape != image2.shape:
         raise ValueError("Error: Images must be of the same size and type.")
     abs_diff = cv2.absdiff(image1, image2)
@@ -100,6 +121,10 @@ def abs_diff_images(image1, image2) -> tuple:
 
 
 class OpenCVImageComparator(AbstractImageComparison):
+    """
+    Thsi class contains methods to calculate image differences, using variety of methods
+    provided by OpenCV library.
+    """
     def __init__(self, image_path_1, image_path_2):
         super().__init__(image_path_1,image_path_2)
 
@@ -118,11 +143,11 @@ class OpenCVImageComparator(AbstractImageComparison):
         return mse_value
 
     def compare_images_histograms_correlation_grayscale(self) -> float:
-        '''
+        """
         Correlation (cv2.HISTCMP_CORREL):
         Interpretation: Higher values indicate more similarity.
         :return:  Range: -1 to 1 (1 indicates perfect correlation, 0 indicates no correlation, -1 indicates perfect negative correlation).
-        '''
+        """
         # Load images as grayscale
         image_1 = load_image_greyscale(self.image_path_1)
         image_2 = load_image_greyscale(self.image_path_2)
@@ -143,11 +168,11 @@ class OpenCVImageComparator(AbstractImageComparison):
         return correlation
 
     def compare_images_histograms_correlation_colored(self) -> float:
-        '''
+        """
         Correlation (cv2.HISTCMP_CORREL):
         Interpretation: Higher values indicate more similarity.
         :return:  Range: -1 to 1 (1 indicates perfect correlation, 0 indicates no correlation, -1 indicates perfect negative correlation).
-        '''
+        """
         # Load images as colored (BGR)
         image_1 = load_image_colored(self.image_path_1)
         image_2 = load_image_colored(self.image_path_2)
@@ -184,7 +209,7 @@ class OpenCVImageComparator(AbstractImageComparison):
         return average_correlation
 
     def absolute_difference_greyscale(self) -> tuple:
-        '''
+        """
         Compares two images by using abs_diff method from opencv library.
         This method loads provided images using grayscale loading.
         :return The method will return two numbers:
@@ -197,13 +222,13 @@ class OpenCVImageComparator(AbstractImageComparison):
             0 means the images are identical.
             A higher mean difference indicates a larger average pixel difference between the two images.
             For 8-bit images, the mean difference is typically in the range of 0 to 255, where 0 means identical and 255 would indicate maximum possible difference for every pixel (which is rare).
-        '''
+        """
         img1 = load_image_greyscale(self.image_path_1)
         img2 = load_image_greyscale(self.image_path_2)
         return abs_diff_images(img1, img2)
 
     def absolute_difference_coloured(self) -> tuple:
-        '''
+        """
         Compares two images by using abs_diff method from opencv library.
         This method loads provided images using coloured loading.
         :return The method will return two numbers:
@@ -216,12 +241,17 @@ class OpenCVImageComparator(AbstractImageComparison):
             0 means the images are identical.
             A higher mean difference indicates a larger average pixel difference between the two images.
             For 8-bit images, the mean difference is typically in the range of 0 to 255, where 0 means identical and 255 would indicate maximum possible difference for every pixel (which is rare).
-        '''
+        """
         img1 = load_image_colored(self.image_path_1)
         img2 = load_image_colored(self.image_path_2)
         return abs_diff_images(img1, img2)
 
     def compare_images_ssim_gray(self):
+        """
+        This method calculates a score representing images differences.
+        This method is loading images using grayscale mode
+        :return: image differences as a score value
+        """
         # Load the images from the given file paths
         image1 = load_image_greyscale(self.image_path_1)
         image2 = load_image_greyscale(self.image_path_2)
@@ -240,6 +270,13 @@ class OpenCVImageComparator(AbstractImageComparison):
         return score
 
     def compare_images_ssim_colored(self):
+        """
+        This method calculates a score representing images differences.
+        This method is loading images using coloured mode
+        :return: image differences as a score value
+        """
+
+
         # Load the images from the given file paths
         image1 = load_image_colored(self.image_path_1)
         image2 = load_image_colored(self.image_path_2)

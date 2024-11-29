@@ -18,8 +18,8 @@ class BaseTest:
         print(f"\nImage Hash difference is: {diff}")
         return diff
 
-    def compare_using_scikit_grayscale_ssim_method(self, image_path_1, image_path_2, comparator_method):
+    def compare_using_scikit_ssim_method(self, image_path_1, image_path_2, comparator_method):
         comparator = SciKitImageComparator(image_path_1, image_path_2)
         similarity, diff = comparator_method(comparator)
-        print(f"\Images similarity: {similarity}; difference: {diff}")
+        print(f"\nImages similarity: {similarity}; difference: {diff}")
         return similarity, diff
