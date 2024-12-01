@@ -7,6 +7,11 @@ from skimage.util import img_as_float
 
 
 def get_channel_axis(img) -> int:
+    """
+    Utlity method to get image's channel value.
+    :param img:
+    :return: int value presenting channel number.
+    """
     # Print shape to inspect
     print("Image shape:", img.shape)
     # Decide channel_axis based on the shape
@@ -19,6 +24,11 @@ def get_channel_axis(img) -> int:
 
 
 def get_data_range(img) -> int:
+    """
+    Utility method to get image's data range for the image.
+    :param img:
+    :return: int value presnting image's data range.
+    """
     min_val, max_val = np.min(img), np.max(img)
     print("Min value:", min_val)
     print("Max value:", max_val)
@@ -36,10 +46,21 @@ def get_data_range(img) -> int:
 
 
 def convert_image_to_float(img: np.ndarray) -> np.ndarray:
+    """
+    Utility method that converts image into float form.
+    :param img:
+    :return: returns image in a fload form of the np.ndarray
+    """
     return img.astype(np.float32) / 255.0  # Converts to float and scales to 0-1 range
 
 
 def _compare_coloured_images_using_ssim(img1: np.ndarray, img2: np.ndarray):
+    """
+    Utility method to compare two images using ssim algorithm.
+    :param img1:
+    :param img2:
+    :return: tuple containing similarity and mean difference.
+    """
     channel_axis_1 = get_channel_axis(img1)
     channel_axis_2 = get_channel_axis(img2)
 
@@ -69,11 +90,17 @@ def _compare_coloured_images_using_ssim(img1: np.ndarray, img2: np.ndarray):
 
 
 class SciKitImageComparator(AbstractImageComparison):
-
+    """
+    Class presenting several methods to compare images using SciKit library.
+    """
     def __init__(self, img_path_1: str, img_path_2: str):
         super().__init__(img_path_1, img_path_2)
 
     def compare_grayscale_images_ssim(self) -> tuple:
+        """
+        This method compares grayscale images using _compare_coloured_images_using_ssim method.
+        :return: tuple containing similarity and mean difference.
+        """
         img1 = load_image_greyscale(self.image_path_1)
         img2 = load_image_greyscale(self.image_path_2)
         similarity, diff = ssim(img1, img2, full=True)
@@ -82,6 +109,12 @@ class SciKitImageComparator(AbstractImageComparison):
         return similarity, mean_diff
 
     def compare_grayscale_resized_images_ssim(self) -> tuple:
+        """
+        This method compares grayscale images re-sized to the image with the smallest dimensions.
+        This method calls _compare_coloured_images_using_ssim.
+
+        :return: tuple containing similarity and mean difference.
+        """
         img1 = load_image_greyscale(self.image_path_1)
         img2 = load_image_greyscale(self.image_path_2)
 
@@ -93,11 +126,19 @@ class SciKitImageComparator(AbstractImageComparison):
         return similarity, mean_diff
 
     def compare_coloured_images_ssim(self) -> tuple:
+        """
+        This method calls  _compare_coloured_images_using_ssim method for coloured images.
+        :return: tuple containing similarity and mean difference.
+        """
         img1 = load_image_colored(self.image_path_1)
         img2 = load_image_colored(self.image_path_2)
         return _compare_coloured_images_using_ssim(img1, img2)
 
     def compare_coloured_resized_images_ssim(self) -> tuple:
+        """
+        This method calls _compare_coloured_images_using_ssim method for coloured, re-sized images.
+        :return: tuple containing similarity and mean difference.
+        """
         img1 = load_image_colored(self.image_path_1)
         img2 = load_image_colored(self.image_path_2)
         img1, img2 = resize_to_smaller_image(img1, img2)
